@@ -1,15 +1,16 @@
 using WebAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-object value = builder.Services.AddControllers();
-object value1 = builder.Services.AddControllersWithViews();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers(); // Use this OR AddControllersWithViews() based on your project type
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<FreeAzureSqlContext>();
+
+// Configure DbContext with SQL Server (example)
+builder.Services.AddDbContext<FreeAzureSqlContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("YourConnectionStringName")));
 
 var app = builder.Build();
 
@@ -27,11 +28,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-internal class WebApplication
-{
-    internal static object CreateBuilder(string[] args)
-    {
-        throw new NotImplementedException();
-    }
-}
