@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers(); // Use this OR AddControllersWithViews() based on your project type
+builder.Services.AddControllersWithViews(); // Use this OR AddControllersWithViews() based on your project type
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
