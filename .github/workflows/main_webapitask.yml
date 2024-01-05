@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest  # Updated to use Ubuntu runner
+  build_and_deploy:
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -25,38 +25,10 @@ jobs:
       - name: dotnet publish
         run: dotnet publish -c Release -o ./publish
 
-      # Debug: List contents of the publish directory
-      - name: List contents of publish directory
-        run: ls -la ./publish  # 'ls' command for Linux runner
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v3
-        with:
-          name: .net-app
-          path: ./publish
-
-  deploy:
-    runs-on: ubuntu-latest  # Consistent with the build job
-
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: .net-app
-
-      - name: List contents of the .net-app directory
-        run: ls -la ./.net-app
-
       - name: Deploy to Azure Web App
-        id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'webapitask'
           slot-name: 'Production'
-          package: ./.net-app
+          package: ./publish
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_924237835EE44D389ACBFCB7134C0414 }}
