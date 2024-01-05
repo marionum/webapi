@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest  # Updated to use Ubuntu runner
 
     steps:
       - uses: actions/checkout@v4
@@ -16,7 +16,7 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '7.x'
+          dotnet-version: '7.x'  # Ensure this matches the version you need
           include-prerelease: true
 
       - name: Build with dotnet
@@ -27,7 +27,7 @@ jobs:
 
       # Debug: List contents of the publish directory
       - name: List contents of publish directory
-        run: ls -la ./publish
+        run: ls -la ./publish  # 'ls' command for Linux runner
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -36,24 +36,24 @@ jobs:
           path: ./publish
 
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest  # Consistent with the build job
+
     needs: build
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
+
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: .net-app
-          path: deploy-artifacts
-      
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'webapitask'
           slot-name: 'Production'
-          package: ./deploy-artifacts/.net-app
-          publish-profile: ${{secrets.AZUREAPPSERVICE_PUBLISHPROFILE_924237835EE44D389ACBFCB7134C0414}}
+          package: ./.net-app
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_924237835EE44D389ACBFCB7134C0414 }}
