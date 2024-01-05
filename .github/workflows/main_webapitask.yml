@@ -34,7 +34,7 @@ jobs:
           name: .net-app
           path: ./publish
 
-  deploy:
+  ddeploy:
     runs-on: ubuntu-latest
     needs: build
     environment:
@@ -54,5 +54,5 @@ jobs:
         with:
           app-name: 'webapitask'
           slot-name: 'Production'
-          package: ./deploy-artifacts
+          package: ./deploy-artifacts/.net-app
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_924237835EE44D389ACBFCB7134C0414 }}
