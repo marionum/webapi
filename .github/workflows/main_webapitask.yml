@@ -39,7 +39,7 @@ jobs:
           name: .net-app
 
       - name: List contents of the .net-app directory
-        run: ls -la ./.net-app
+        run: ls -la .net-app
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
